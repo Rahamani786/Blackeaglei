@@ -32,14 +32,114 @@
   <link href="logo.svg" rel="apple-touch-icon"/>
 
   <style id="global-fixes-v2">
+    /* Global Overflow Protection */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+    }
+    img, video, svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
     .rt-navbar { background-color: #ffffff !important; width: 100% !important; }
-    .rt-nav-menu { display: flex !important; align-items: center !important; justify-content: center !important; gap: 2rem !important; flex-grow: 1 !important; margin: 0 auto !important; }
-    .rt-nav-menu a.rt-menu-text { font-size: 15.5px !important; font-weight: 600 !important; color: #0d1b2a !important; text-decoration: none !important; padding: 0.5rem 0.75rem !important; transition: color 0.2s ease !important; white-space: nowrap !important; display: inline-block !important; }
-    .rt-nav-menu a.rt-menu-text:hover { color: #245a42 !important; }
-    .rt-nav-menu a.rt-menu-text.w--current { color: #245a42 !important; }
     .rt-navbar-right { display: flex !important; align-items: center !important; flex-shrink: 0 !important; margin-left: 2rem !important; }
     .rt-button { white-space: nowrap !important; min-width: max-content !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; padding: 0.95rem 2rem !important; box-sizing: border-box !important; }
     .rt-button-text { white-space: nowrap !important; font-size: 15px !important; font-weight: 600 !important; }
+
+    /* Desktop Navbar */
+    @media (min-width: 992px) {
+      .rt-nav-menu { display: flex !important; align-items: center !important; justify-content: center !important; gap: 2rem !important; flex-grow: 1 !important; margin: 0 auto !important; }
+      .rt-nav-menu a.rt-menu-text { font-size: 15.5px !important; font-weight: 600 !important; color: #0d1b2a !important; text-decoration: none !important; padding: 0.5rem 0.75rem !important; transition: color 0.2s ease !important; white-space: nowrap !important; display: inline-block !important; }
+      .rt-nav-menu a.rt-menu-text:hover,
+      .rt-nav-menu a.rt-menu-text.w--current { color: #245a42 !important; }
+    }
+
+    /* Mobile & Tablet Navbar */
+    @media (max-width: 991px) {
+      .rt-navbar {
+        background-color: #ffffff !important;
+        padding: 0.75rem 1rem !important;
+        position: relative !important;
+      }
+      .rt-navbar-wrapper {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+      }
+      .w-nav-overlay {
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        overflow: visible !important;
+      }
+      .rt-nav-menu.w-nav-menu:not(.w--open):not([data-nav-menu-open]) {
+        display: none !important;
+      }
+      .rt-nav-menu.w-nav-menu.w--open,
+      .rt-nav-menu.w-nav-menu[data-nav-menu-open],
+      .w-nav-overlay .rt-nav-menu.w-nav-menu {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        background: #ffffff !important;
+        padding: 1.25rem 1.5rem !important;
+        box-shadow: 0 16px 36px rgba(0, 29, 40, 0.14) !important;
+        border-radius: 0 0 16px 16px !important;
+        border-top: 1px solid #f1f5f9 !important;
+        width: 100% !important;
+        position: relative !important;
+        z-index: 99999 !important;
+        gap: 0.25rem !important;
+      }
+      .rt-nav-menu.w-nav-menu.w--open a.rt-menu-text,
+      .rt-nav-menu.w-nav-menu[data-nav-menu-open] a.rt-menu-text,
+      .w-nav-overlay .rt-nav-menu.w-nav-menu a.rt-menu-text {
+        display: block !important;
+        width: 100% !important;
+        padding: 0.85rem 0.5rem !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        color: #0d1b2a !important;
+        text-decoration: none !important;
+        border-bottom: 1px solid #f8fafc !important;
+      }
+      .rt-nav-menu.w-nav-menu.w--open a.rt-menu-text:hover,
+      .rt-nav-menu.w-nav-menu.w--open a.rt-menu-text.w--current,
+      .rt-nav-menu.w-nav-menu[data-nav-menu-open] a.rt-menu-text:hover,
+      .rt-nav-menu.w-nav-menu[data-nav-menu-open] a.rt-menu-text.w--current,
+      .w-nav-overlay .rt-nav-menu.w-nav-menu a.rt-menu-text:hover,
+      .w-nav-overlay .rt-nav-menu.w-nav-menu a.rt-menu-text.w--current {
+        color: #245a42 !important;
+      }
+      .rt-menu-button-main.w-nav-button {
+        min-width: 44px !important;
+        min-height: 44px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 8px !important;
+        cursor: pointer !important;
+        background: transparent !important;
+      }
+      .rt-menu-button-main .rt-mobile-menu-button-line {
+        width: 24px !important;
+        height: 2px !important;
+        background-color: #001d28 !important;
+        margin: 3px 0 !important;
+        transition: all 0.2s ease !important;
+      }
+      .rt-navbar-right {
+        margin-left: auto !important;
+      }
+    }
 
     /* Fix sticky parallax footer stacking */
     .rt-full-wrapper {
@@ -531,10 +631,45 @@
           </div>
         </div>
 
-        <!-- 3. Centered Responsive Project Grid (1, 2, or 3+ projects are always centered!) -->
+        <!-- 3. Centered Responsive Project Grid -->
         <div class="portfolio-grid-wrapper">
           <div class="portfolio-cards-grid" id="portfolio-cards-container">
-            <!-- Project cards rendered dynamically -->
+            <div class="portfolio-card-item" onclick="openProjectModal('blackeagleai')">
+              <div class="portfolio-card-thumb-wrap">
+                <img src="/blackeaglei-website-preview.png" alt="BlackEagleAI — AI Agency Website" class="portfolio-card-thumb" loading="lazy"/>
+              </div>
+              <div class="portfolio-card-body">
+                <div class="portfolio-title-row">
+                  <h3 class="portfolio-card-title">BlackEagleAI — AI Agency Website</h3>
+                  <div class="portfolio-badges-wrap">
+                    <span class="badge-view-only">View Only</span>
+                    <span class="badge-active">Active</span>
+                  </div>
+                </div>
+                <div class="portfolio-tag-row">
+                  <span class="portfolio-category-pill">AI Agency &amp; Automation</span>
+                  <span class="portfolio-features-count">• 8 Features</span>
+                </div>
+                <p class="portfolio-card-desc">
+                  An AI-powered agency website built to showcase intelligent automation, AI agents, workflow systems, and custom digital solutions for modern businesses.
+                </p>
+                <div class="portfolio-bottom-row" onclick="event.stopPropagation()">
+                  <button class="portfolio-icon-btn" title="View Project Details" onclick="openProjectModal('blackeagleai')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="16 18 22 12 16 6"></polyline>
+                      <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                  </button>
+                  <a href="index.html" class="portfolio-icon-btn" title="Open Live Project" target="_blank">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                      <line x1="21" y1="3" x2="14" y2="10"></line>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -801,8 +936,6 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-      renderProjects(PROJECTS);
-
       const searchInput = document.getElementById('project-search-input');
       if (searchInput) {
         searchInput.addEventListener('input', function() {
@@ -813,6 +946,22 @@
                    p.description.toLowerCase().includes(query);
           });
           renderProjects(filtered);
+        });
+      }
+
+      const menuBtn = document.querySelector('.rt-menu-button-main, .w-nav-button');
+      const navMenu = document.querySelector('.rt-nav-menu, .w-nav-menu');
+      if (menuBtn && navMenu) {
+        menuBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          navMenu.classList.toggle('w--open');
+          menuBtn.classList.toggle('w--open');
+        });
+        document.addEventListener('click', function(e) {
+          if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+            navMenu.classList.remove('w--open');
+            menuBtn.classList.remove('w--open');
+          }
         });
       }
     });
