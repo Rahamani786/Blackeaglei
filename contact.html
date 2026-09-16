@@ -263,6 +263,29 @@ img, video, svg {
     text-align: center !important;
   }
 }
+
+/* Footer Links Styling */
+.rt-footer-links {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.65rem !important;
+}
+.rt-footer-links a.rt-footer-link,
+.rt-footer-link {
+  color: #bfd0cc !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease, transform 0.2s ease !important;
+  display: inline-block !important;
+  line-height: 1.5 !important;
+}
+.rt-footer-links a.rt-footer-link:hover,
+.rt-footer-links a.rt-footer-link.w--current,
+.rt-footer-link:hover,
+.rt-footer-link.w--current {
+  color: #ffffff !important;
+}
 </style>
 
 <style id="hide-webflow-badge">
@@ -352,11 +375,11 @@ a[href*="webflow.com?utm_campaign=brandjs"] {
           <div class="w-layout-vflex rt-footer-col-v2">
             <div class="rt-text-style-h5 rt-text-color-white">Navigation</div>
             <div class="w-layout-vflex rt-footer-links">
-              <a href="index.html" class="rt-footer-link ">Home</a>
-              <a href="about.html" class="rt-footer-link ">About</a>
-              <a href="service.html" class="">Service</a>
-          <a href="portfolio.html" class="rt-menu-text rt-responsive-gap">Portfolio</a>
-          <a href="contact.html" class="rt-footer-link w--current">Contact</a>
+              <a href="index.html" class="rt-footer-link">Home</a>
+              <a href="about.html" class="rt-footer-link">About</a>
+              <a href="service.html" class="rt-footer-link">Service</a>
+              <a href="portfolio.html" class="rt-footer-link">Portfolio</a>
+              <a href="contact.html" class="rt-footer-link w--current">Contact</a>
             </div>
           </div>
           <div class="w-layout-vflex rt-footer-col-v2">
