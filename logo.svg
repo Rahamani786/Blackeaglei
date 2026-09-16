@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 34" width="160" height="34" fill="none">
+  <!-- Clean, bold blackEaglei logotype filling full height -->
+  <text x="2" y="26" font-family="'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="27" font-weight="800" fill="#0d1b2a" letter-spacing="-0.8px">
+    black<tspan fill="#245a42">Eagle</tspan><tspan fill="#388e68">i</tspan>
+  </text>
+  <!-- Subtle brand dot accent -->
+  <circle cx="152" cy="7" r="3.2" fill="#388e68"/>
+</svg>

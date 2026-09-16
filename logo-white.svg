@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 34" width="160" height="34" fill="none">
+  <text x="2" y="26" font-family="'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="27" font-weight="800" fill="#ffffff" letter-spacing="-0.8px">
+    black<tspan fill="#48bb78">Eagle</tspan><tspan fill="#38d39f">i</tspan>
+  </text>
+  <circle cx="152" cy="7" r="3.2" fill="#38d39f"/>
+</svg>

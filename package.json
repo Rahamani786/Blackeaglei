@@ -1,0 +1,13 @@
+{
+  "name": "assurix-clone",
+  "version": "1.0.0",
+  "description": "Pixel-perfect clone of Assurix (Home Two, About, Service, Service Details, Contact)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.2"
+  }
+}
