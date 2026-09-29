@@ -704,22 +704,22 @@ document.addEventListener("DOMContentLoaded", function() {
             
             var dateField = document.getElementById("submission-date-time");
             var now = new Date();
-            if (dateField) dateField.value = now.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'long' });
+            var formattedTime = now.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'long' });
+            if (dateField) dateField.value = formattedTime;
             
-            // Build payload
-            var formData = new FormData(form);
-            var payload = {};
-            formData.forEach(function(value, key) {
-                if (key === "_honey" && !value) return;
-                payload[key] = value;
-            });
-            
-            // Anti-spam honey check
-            if (formData.get("_honey")) {
-                form.style.display = "none";
-                if (doneBlock) doneBlock.style.display = "block";
-                return;
-            }
+            // Build payload and ensure every customer field is explicitly mapped
+            var payload = {
+                "Customer Name": nameVal,
+                "Phone Number": phoneVal,
+                "Email": emailVal,
+                "Service": serviceVal || "General Inquiry",
+                "Message": messageVal,
+                "_replyto": emailVal,
+                "_subject": "New Contact Form Submission - Black Eagle AI",
+                "_template": "table",
+                "_captcha": "false",
+                "Submission Date & Time": formattedTime
+            };
             
             // Helper function to handle success
             function handleSuccess() {
@@ -736,18 +736,22 @@ document.addEventListener("DOMContentLoaded", function() {
                 handleSuccess();
             }, 300);
 
-            // Dispatch email delivery to FormSubmit in background
+            // Send via FormData and JSON to FormSubmit endpoint
+            var submitFormData = new FormData();
+            for (var k in payload) {
+                submitFormData.append(k, payload[k]);
+            }
+
             fetch("https://formsubmit.co/ajax/817fb0243fbd50308d19979dfa4eb178", {
                 method: "POST",
                 headers: { 
-                    "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
-                body: JSON.stringify(payload),
+                body: submitFormData,
                 keepalive: true
             })
             .catch(function() {
-                // Secondary fallback delivery
+                // Secondary fallback delivery with JSON
                 fetch("https://formsubmit.co/ajax/faheemrahamani@gmail.com", {
                     method: "POST",
                     headers: { 
