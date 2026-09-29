@@ -761,7 +761,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 return response.json();
             })
             .then(function(data) {
-                if (data.success === "true" || data.success === true || data.message) {
+                if (data.success === "true" || data.success === true || (data.message && (data.message.toLowerCase().includes("success") || data.message.toLowerCase().includes("activation")))) {
                     handleSuccess();
                 } else {
                     throw new Error(data.message || "Failed");
