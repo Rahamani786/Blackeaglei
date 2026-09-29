@@ -486,6 +486,7 @@ a[href*="webflow.com?utm_campaign=brandjs"] {
     <input type="hidden" name="_captcha" value="false" />
     <input type="hidden" name="_template" value="table" />
     <input type="hidden" name="_replyto" id="form-replyto" value="" />
+    <input type="hidden" name="_next" id="form-next" value="https://blackeaglei.com/contact.html?submitted=true" />
     <input type="hidden" name="Submission Date & Time" id="submission-date-time" value="" />
     <input type="text" name="_honey" style="display:none" />
 
@@ -632,18 +633,30 @@ a[href*="webflow.com?utm_campaign=brandjs"] {
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     var form = document.querySelector('form[data-name="Contact Form"]') || document.querySelector("form.rt-form") || document.getElementById("wf-form-Contact-Form");
-    
+    var formParent = form ? (form.closest(".w-form") || form.parentElement) : null;
+    var doneBlock = formParent ? formParent.querySelector(".w-form-done") : document.querySelector(".w-form-done");
+    var failBlock = formParent ? formParent.querySelector(".w-form-fail") : document.querySelector(".w-form-fail");
     var checkboxInput = document.getElementById("checkbox");
+    var nextField = document.getElementById("form-next");
+
+    // Dynamically set _next redirect URL
+    if (nextField) {
+        try {
+            nextField.value = window.location.origin + window.location.pathname + "?submitted=true";
+        } catch(e) {}
+    }
+
+    // Check if user was redirected back after successful submission
+    if (window.location.search.indexOf("submitted=true") !== -1 || window.location.search.indexOf("success=true") !== -1) {
+        if (form) form.style.display = "none";
+        if (doneBlock) {
+            doneBlock.style.display = "block";
+            doneBlock.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }
 
     if (form) {
         form.addEventListener("submit", function(e) {
-            e.preventDefault();
-            var formParent = form.closest(".w-form") || form.parentElement;
-            var doneBlock = formParent.querySelector(".w-form-done");
-            var failBlock = formParent.querySelector(".w-form-fail");
-            var failMsg = document.getElementById("contact-fail-msg");
-            var whatsappBtn = document.getElementById("fallback-whatsapp-btn");
-            var emailBtn = document.getElementById("fallback-email-btn");
             var submitBtn = form.querySelector('input[type="submit"]') || form.querySelector(".rt-form-submit-button");
             var btnTextDiv = form.querySelector(".rt-button-text");
             var originalBtnText = btnTextDiv ? btnTextDiv.textContent : (submitBtn ? submitBtn.value : "Submit");
@@ -665,38 +678,19 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             
             if (!valid) {
+                e.preventDefault();
                 if (failBlock) {
+                    var failMsg = document.getElementById("contact-fail-msg");
                     if (failMsg) failMsg.textContent = "Please fill in all required fields and check the privacy policy agreement.";
                     failBlock.style.display = "block";
                 }
                 return;
             }
             
-            // Set loading state & prevent duplicate submissions
+            // Set loading state
             if (submitBtn) submitBtn.disabled = true;
             if (btnTextDiv) btnTextDiv.textContent = "Sending message...";
             if (failBlock) failBlock.style.display = "none";
-            
-            // Prepare fallback links with pre-filled content
-            var waMessage = "Hello Black Eagle AI team,\n\n" +
-                            "I would like to inquire about your AI services:\n" +
-                            "• Customer Name: " + nameVal + "\n" +
-                            "• Phone Number: " + phoneVal + "\n" +
-                            "• Email: " + emailVal + "\n" +
-                            "• Service: " + (serviceVal || "AI Automation / General Inquiry") + "\n\n" +
-                            "Message:\n" + messageVal;
-            
-            var waUrl = "https://wa.me/919820179474?text=" + encodeURIComponent(waMessage);
-            var mailSubject = "Inquiry from " + nameVal + " - Black Eagle AI";
-            var mailBody = "Customer Name: " + nameVal + "\n" +
-                           "Phone Number: " + phoneVal + "\n" +
-                           "Email: " + emailVal + "\n" +
-                           "Service: " + (serviceVal || "AI Automation / General Inquiry") + "\n\n" +
-                           "Message:\n" + messageVal;
-            var mailUrl = "mailto:faheemrahamani@gmail.com?subject=" + encodeURIComponent(mailSubject) + "&body=" + encodeURIComponent(mailBody);
-            
-            if (whatsappBtn) whatsappBtn.href = waUrl;
-            if (emailBtn) emailBtn.href = mailUrl;
 
             // Populate hidden fields
             var replyToField = document.getElementById("form-replyto");
@@ -707,7 +701,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var formattedTime = now.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'long' });
             if (dateField) dateField.value = formattedTime;
             
-            // Build payload and ensure every customer field is explicitly mapped
+            // Build payload
             var payload = {
                 "Customer Name": nameVal,
                 "Phone Number": phoneVal,
@@ -718,10 +712,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 "_subject": "New Contact Form Submission - Black Eagle AI",
                 "_template": "table",
                 "_captcha": "false",
+                "_next": nextField ? nextField.value : (window.location.origin + window.location.pathname + "?submitted=true"),
                 "Submission Date & Time": formattedTime
             };
             
-            // Helper function to handle success
+            // Helper function to handle success in-place
             function handleSuccess() {
                 form.style.display = "none";
                 if (doneBlock) {
@@ -731,38 +726,41 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (failBlock) failBlock.style.display = "none";
             }
 
-            // Immediately transition to success within 300ms for instant user experience
-            setTimeout(function() {
-                handleSuccess();
-            }, 300);
-
-            // Send via FormData and JSON to FormSubmit endpoint
+            // Send via FormData to FormSubmit
             var submitFormData = new FormData();
             for (var k in payload) {
                 submitFormData.append(k, payload[k]);
             }
 
+            e.preventDefault();
+
+            // Try fast AJAX submission
             fetch("https://formsubmit.co/ajax/817fb0243fbd50308d19979dfa4eb178", {
                 method: "POST",
-                headers: { 
-                    "Accept": "application/json"
-                },
-                body: submitFormData,
-                keepalive: true
+                headers: { "Accept": "application/json" },
+                body: submitFormData
+            })
+            .then(function(res) {
+                if (res.ok) {
+                    handleSuccess();
+                } else {
+                    // Fallback to secondary endpoint
+                    return fetch("https://formsubmit.co/ajax/faheemrahamani@gmail.com", {
+                        method: "POST",
+                        headers: { "Accept": "application/json" },
+                        body: submitFormData
+                    }).then(function(res2) {
+                        if (res2.ok) {
+                            handleSuccess();
+                        } else {
+                            throw new Error("AJAX failed, fallback to native submit");
+                        }
+                    });
+                }
             })
             .catch(function() {
-                // Secondary fallback delivery with JSON
-                fetch("https://formsubmit.co/ajax/faheemrahamani@gmail.com", {
-                    method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify(payload),
-                    keepalive: true
-                }).catch(function(e) {
-                    console.log("Background delivery notice:", e);
-                });
+                // If AJAX encounters network/CORS failure, execute native form submission
+                form.submit();
             });
         });
     }
